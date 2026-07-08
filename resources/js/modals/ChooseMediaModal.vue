@@ -12,7 +12,7 @@
       class="o1-flex o1-flex-col o1-h-full mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden"
     >
       <slot>
-        <ModalContent class="o1-min-h-[90%] o1-grow o1-px-8 o1-py-0 o1-flex o1-flex-col">
+        <ModalContent class="nmh-modal-content o1-min-h-[90%] o1-grow o1-px-8 o1-py-0 o1-flex o1-flex-col">
           <!-- Selected media -->
           <div class="o1-flex o1-flex-col o1-pt-6 o1-pb-1 o1-border-b o1-border-slate-200 dark:o1-border-slate-700">
             <div class="o1-leading-tight text-primary-500 o1-font-bold o1-text-md o1-mb-2">
@@ -40,12 +40,12 @@
             </div>
           </div>
 
-          <div class="o1-flex o1-flex-col lg:o1-flex-row overflow-y-auto o1-min-h-[30%] o1-h-full o1-gap-8">
-            <div class="o1-flex o1-flex-col o1-gap-5 o1-w-full lg:o1-max-w-xs overflow-y-auto o1-py-4">
+          <div class="nmh-columns o1-flex o1-flex-col lg:o1-flex-row overflow-y-auto o1-min-h-[30%] o1-h-full o1-gap-8">
+            <div class="nmh-sidebar o1-flex o1-flex-col o1-gap-5 o1-w-full lg:o1-max-w-xs overflow-y-auto o1-py-4">
               <!-- Choose collection -->
               <ModalFilterItem :title="__('novaMediaHub.chooseCollectionTitle')">
                 <select
-                  className="o1-capitalize w-full block form-control form-control-bordered form-input"
+                  class="nmh-filter-select o1-capitalize w-full block form-control form-control-bordered form-input"
                   v-model="collection"
                 >
                   <option value="">{{ __('novaMediaHub.showAll') }}</option>
@@ -62,7 +62,7 @@
                 <input
                   v-model="search"
                   ref="search"
-                  class="w-full form-control form-input form-input-bordered"
+                  class="w-full form-control form-input form-control-bordered"
                   tabindex="-1"
                   type="search"
                   :placeholder="__('novaMediaHub.searchMediaTitle')"
@@ -91,7 +91,7 @@
               <div class="o1-leading-tight text-primary-500 o1-font-bold o1-text-md o1-mb-2">
                 {{ __('novaMediaHub.chooseMediaTitle') }}
               </div>
-              <div class="o1-w-full overflow-y-auto">
+              <div class="nmh-media-scroll o1-w-full overflow-y-auto">
                 <div
                   id="media-items-list"
                   class="o1-w-full flex flex-wrap o1-gap-4 o1-justify-items-center o1-p-1"
@@ -409,6 +409,68 @@ export default {
 <style lang="scss">
 .full-modal {
   height: calc(100vh - 3rem);
+  max-height: 90vh;
+}
+
+.full-modal .nmh-filter-select {
+  padding: 0 1rem;
+  margin-bottom: 0;
+}
+
+/* Tablet & mobile (< lg): collapse the nested scroll areas into a single
+   natural scroll so every control (search, order, quick upload, media grid)
+   stays reachable. Desktop (>= 1024px) keeps the two-column layout untouched. */
+@media (max-width: 1023.98px) {
+  .full-modal .nmh-modal-content {
+    overflow-y: auto;
+    min-height: 0;
+  }
+
+  .full-modal .nmh-columns {
+    overflow: visible;
+    height: auto;
+    min-height: 0;
+  }
+
+  .full-modal .nmh-sidebar,
+  .full-modal .nmh-media-scroll {
+    overflow: visible;
+    height: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .full-modal {
+    max-height: 80vh;
+  }
+
+  /* Tighter horizontal padding on phones to give controls more room. */
+  .full-modal .nmh-modal-content {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Full-width media thumbnails so they fill the row instead of leaving
+     blank space on the right on narrow screens. */
+  .full-modal #media-items-list > button {
+    width: 100%;
+    height: auto;
+  }
+
+  .full-modal #media-items-list > button > img {
+    height: auto;
+  }
+}
+
+/* On desktop the sidebar keeps `overflow-y: auto`, which forces `overflow-x`
+   to clip. The bordered inputs draw their border as a 1px box-shadow ring that
+   would get clipped left/right (the sidebar only has vertical padding). A small
+   horizontal padding gives that ring room so borders render fully. */
+@media (min-width: 1024px) {
+  .full-modal .nmh-sidebar {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
 }
 
 .media-hub-dropzone {

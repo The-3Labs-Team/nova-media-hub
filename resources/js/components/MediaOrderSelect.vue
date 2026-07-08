@@ -1,6 +1,6 @@
 <template>
   <select
-    class="o1-capitalize w-full block form-control form-control-bordered form-input o1-w-[130px]"
+    class="nmh-filter-select o1-capitalize w-full block form-control form-control-bordered form-input"
     :value="normalizedSelected"
     @change="handleChange"
   >
@@ -48,9 +48,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.o1-w-\[130px\] {
-  width: 130px;
-}
-</style>
